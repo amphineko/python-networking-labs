@@ -3,39 +3,45 @@
 import argparse
 import asyncore
 import random
-import signal
 import socket
+import threading
+
+import shared
 
 
-class dispatcher(asyncore.dispatcher):
+class server_dispatcher(shared.dispatcher):
     def __init__(self, port: int, host: str, family: int):
-        super().__init__()
-        self.create_socket(family, socket.SOCK_DGRAM)
-        self.bind((port, host))
-        print('bound to [{0}]:{1}'.format(port, host))
+        # create socket
+        super().__init__(family)
+        # bind
+        self.bind((host, port))
+        print('INFO: Bound to [{0}]:{1}'.format(host, port))
 
     def handle_read(self):
-        data, remote = self.socket.recvfrom(114514)
-        host, port = remote[0:2]
-        print('<[{0}]:{1}> {2}'.format(host, port, data.decode('utf-8')))
-        self.socket.sendto(data, remote)
-
-    def writable(self):
-        return False
+        # async receive
+        bytes, address = self.socket.recvfrom(4096)
+        port, host = address[0:2]  # slice unneeded members
+        print('INFO: Received from [{0}]:{1}\n{2}'.format(
+            host, port, bytes.decode('utf-8')))
+        # echo reply
+        self.socket.sendto(bytes, address)  # FIXME: send async
 
 
 if __name__ == "__main__":
+    # parse program arguments
     parser = argparse.ArgumentParser()
     parser.add_argument('-a', '--host', default='localhost', type=str)
-    # dynamic ports range: rfc6335
-    random_port = random.choice(range(49152, 65535))
+    random_port = random.choice(range(49152, 65535))  # rfc6335: dynamic ports
     parser.add_argument('-p', '--port', default=random_port, type=int)
     args = parser.parse_args()
 
+    # resolve binding endpoints
     addrs = socket.getaddrinfo(args.host, args.port, type=socket.SOCK_DGRAM)
     for addr in addrs:
         family, _, _, _, endpoint = addr
-        port, host = endpoint[0:2]
-        dispatcher(port, host, family)
+        host, port = endpoint[0:2]
+        # create server object
+        server_dispatcher(port, host, family)
 
-    asyncore.loop()
+    # start io loop
+    threading.Thread(target=lambda: asyncore.loop()).start()
