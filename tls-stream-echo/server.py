@@ -10,7 +10,7 @@ import threading
 
 context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
 
-GOODBYE = 'GOODBYE JOHN CEEEENAAAAAAAAAAA!'.encode('utf-8')
+GOODBYE = 'GOODBYE AND JOHN CEEEENAAAAAAAAAAA!'.encode('utf-8')
 
 
 def send_john_cena(channel: socket.socket):
@@ -27,22 +27,23 @@ def channel_thread(channel: socket.socket):
         size = size_buffer[0]
         print('(pending: {})'.format(size))
 
-        buffer = bytes()
-        while len(buffer) < size:
-            buffer = buffer + channel.recv(min([size - len(buffer), 64]))
-
-        if buffer == b'\0':
+        if size == 0:
             print('Closing connection to [{}]:{}'.format(host, port))
             break
 
-        print('Received hello from [{}]:{}.'.format(host, port))
+        buffer = bytes()
+        while len(buffer) < size:
+            buffer_size = min([size - len(buffer), 64])
+            buffer = buffer + channel.recv(buffer_size)
+
+        print('Received message from [{}]:{}.'.format(host, port))
         print(buffer.decode('utf-8'))
 
         channel.send(bytes([size, ]))
         channel.send(buffer)
 
     send_john_cena(channel)
-    channel.shutdown(socket.SHUT_RDWR)
+    channel.shutdown(socket.SHUT_WR)
     channel.close()
 
 

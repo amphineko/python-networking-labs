@@ -5,7 +5,6 @@ import os
 from os import path
 import socket
 import ssl
-import sys
 import threading
 
 
@@ -18,11 +17,14 @@ def send_thread(client: socket.socket):
         try:
             hello = input()
         except EOFError:
-            hello = '\0'
+            hello = ''
         buffer = hello.encode('utf-8')
 
         client.send(bytes([len(buffer), ]))
-        client.send(buffer)
+        if (len(buffer) > 0):
+            client.send(buffer)
+        else:
+            break
 
 
 if __name__ == "__main__":
@@ -56,13 +58,17 @@ if __name__ == "__main__":
 
     while True:
         size_buffer = client.recv(1)
-        if (len(size_buffer) == 0):
+        if len(size_buffer) == 0:
             break
         size = size_buffer[0]
         print('(pending {})'.format(size))
 
         buffer = bytes()
-        while len(buffer) < size:
-            buffer = buffer + client.recv(min([size - len(buffer), 64]))
+        while len(buffer) != size:
+            buffer_size = min([64, size - len(buffer)])
+            buffer = buffer + client.recv(buffer_size)
+            # print('(pending {})'.format(size - len(buffer)))
 
         print('Response> {}'.format(buffer.decode('utf-8')))
+
+    client.close()
