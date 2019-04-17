@@ -10,15 +10,15 @@ import threading
 
 context = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
 
-START = 'JOHN CEEEENAAAAAAAAAAA!'.encode('utf-8')
+GOODBYE = 'GOODBYE JOHN CEEEENAAAAAAAAAAA!'.encode('utf-8')
 
 
 def send_john_cena(channel: socket.socket):
-    channel.send(bytes([len(START), ]) + START)
+    channel.send(bytes([len(GOODBYE), ]) + GOODBYE)
 
 
 def channel_thread(channel: socket.socket):
-    host, port = channel.getpeername()
+    host, port = channel.getpeername()[0:2]
 
     while True:
         size_buffer = channel.recv(1)
@@ -89,10 +89,10 @@ if __name__ == "__main__":
     # resolve binding endpoints
     addrs = socket.getaddrinfo(args.host, args.port, type=socket.SOCK_DGRAM)
     for family, _, _, _, endpoint in addrs:
-        host, port = endpoint
+        host, port = endpoint[0:2]
         server = create_server(port, host, family)
 
-        bind_host, bind_port = server.getsockname()
+        bind_host, bind_port = server.getsockname()[0:2]
         print('Listening at [{}]:{}'.format(bind_host, bind_port))
 
         threading.Thread(target=accept_thread, kwargs={

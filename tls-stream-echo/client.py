@@ -31,7 +31,7 @@ if __name__ == "__main__":
     # default to localhost
     parser.add_argument('-a', '--host', default='localhost', type=str)
     # default to random
-    parser.add_argument('-p', '--port', type=int)
+    parser.add_argument('-p', '--port', required=True, type=int)
     # default to cert.pem
     parser.add_argument('-c', '--cert', default='cert.pem', type=str)
     args = parser.parse_args()
@@ -46,6 +46,8 @@ if __name__ == "__main__":
 
     client = context.wrap_socket(socket.socket(), server_side=False)
     client.connect((args.host, args.port))
+    host, port = client.getpeername()[0:2]
+    print('Connected to [{}]:{}'.format(host, port))
     print('Remote certificate: {}'.format(client.getpeercert()))
     print('Cipher: {}'.format(client.cipher()))
 
@@ -62,5 +64,5 @@ if __name__ == "__main__":
         buffer = bytes()
         while len(buffer) < size:
             buffer = buffer + client.recv(min([size - len(buffer), 64]))
-            
+
         print('Response> {}'.format(buffer.decode('utf-8')))
