@@ -3,6 +3,8 @@
 # https://github.com/brandon-rhodes/fopnp/blob/m/py3/chapter07/zen_utils.py
 # Constants and routines for supporting a certain network conversation.
 
+# This version is modified to use TLS connections.
+
 import argparse
 import socket
 import time
@@ -22,11 +24,13 @@ def parse_command_line(description):
     """Parse command line and return a socket address."""
     parser = argparse.ArgumentParser(description=description)
     parser.add_argument('host', help='IP or hostname')
+    parser.add_argument('-c', help='certificate file', required=True, type=str)
+    parser.add_argument('-k', help='key file', required=True, type=str)
     parser.add_argument('-p', metavar='port', type=int, default=1060,
                         help='TCP port (default 1060)')
     args = parser.parse_args()
     address = (args.host, args.p)
-    return address
+    return address, args.c, args.k
 
 
 def create_srv_socket(address):
@@ -39,12 +43,13 @@ def create_srv_socket(address):
     return listener
 
 
-def accept_connections_forever(listener):
+def accept_connections_forever(listener, context):
     """Forever answer incoming connections on a listening socket."""
     while True:
         sock, address = listener.accept()
+        ssl_sock = context.wrap_socket(sock, server_side=True)
         print('Accepted connection from {}'.format(address))
-        handle_conversation(sock, address)
+        handle_conversation(ssl_sock, address)
 
 
 def handle_conversation(sock, address):
