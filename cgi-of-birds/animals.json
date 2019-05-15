@@ -1,0 +1,18 @@
+{
+  "Cat": {
+    "Scientific name": "Felis catus",
+    "Description": "Cats are similar in anatomy to the other felid species, with a strong flexible body, quick reflexes, sharp teeth and retractable claws adapted to killing small prey. They are predators who are most active at dawn and dusk (crepuscular). Cats can hear sounds too faint or too high in frequency for human ears, such as those made by mice and other small animals. Compared to humans, they see better in the dark (they see in near total darkness) and have a better sense of smell, but poorer color vision. Cats, despite being solitary hunters, are a social species. Cat communication includes the use of vocalizations including mewing, purring, trilling, hissing, growling and grunting as well as cat-specific body language. Cats also communicate by secreting and perceiving pheromones. (Wikipedia)"
+  },
+  "Dog": {
+    "Scientific name": "Canis lupus familiaris",
+    "Description": "Their long association with humans has led dogs to be uniquely attuned to human behavior and they are able to thrive on a starch-rich diet that would be inadequate for other canid species. Dogs vary widely in shape, size and colors. They perform many roles for humans, such as hunting, herding, pulling loads, protection, assisting police and military, companionship and, more recently, aiding disabled people and therapeutic roles. This influence on human society has given them the sobriquet of \"man's best friend\""
+  },
+  "Koala": {
+    "Scientific name": "Phascolarctos cinereus",
+    "Description": "Koalas typically inhabit open eucalypt woodlands, and the leaves of these trees make up most of their diet. Because this eucalypt diet has limited nutritional and caloric content, koalas are largely sedentary and sleep up to 20 hours a day. They are asocial animals, and bonding exists only between mothers and dependent offspring. Adult males communicate with loud bellows that intimidate rivals and attract mates. Males mark their presence with secretions from scent glands located on their chests. Being marsupials, koalas give birth to underdeveloped young that crawl into their mothers' pouches, where they stay for the first six to seven months of their lives. These young koalas, known as joeys, are fully weaned around a year old. Koalas have few natural predators and parasites, but are threatened by various pathogens, such as Chlamydiaceae bacteria and the koala retrovirus, as well as by bushfires and droughts."
+  },
+  "Kangaroo": {
+    "Scientific name": "Macropodidae",
+    "Description": "Kangaroos have large, powerful hind legs, large feet adapted for leaping, a long muscular tail for balance, and a small head. Like most marsupials, female kangaroos have a pouch called a marsupium in which joeys complete postnatal development. The large kangaroos have adapted much better than the smaller macropods to land clearing for pastoral agriculture and habitat changes brought to the Australian landscape by humans. Many of the smaller species are rare and endangered, while kangaroos are relatively plentiful."
+  }
+}
