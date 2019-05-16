@@ -6,7 +6,7 @@ import queue
 import random
 import socket
 import threading
-
+from collections import Counter
 
 import shared
 
@@ -26,7 +26,9 @@ class socket_dispatcher(asyncore.dispatcher_with_send):
         if not bytes:
             return
 
-        self._queue.put(bytes)
+        line = bytes.decode('utf-8').strip()
+        ret = str.join('', ['{}={}, '.format(key, value, ) for key, value in Counter(line).items()])
+        self._queue.put(ret.encode('utf-8'))
         print('Received from [{}]:{}\n{}'.format(
             self._host, self._port, bytes.decode('utf-8')))
 
